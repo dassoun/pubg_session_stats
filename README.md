@@ -15,7 +15,7 @@ Please note that I discovered Python while writing this script, so feel free to 
 
 the **conf.py** file has to be completed.
 
--  **CONST_API_KEY**: PUBG API Devoper Key**, wich can be found here: https://developer.pubg.com/.
+-  **CONST_API_KEY**: PUBG API Devoper Key, wich can be found here: https://developer.pubg.com/.
 
 -  **CONST_PLAYER_NAME**: the name of the player you want to track.
 
