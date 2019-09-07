@@ -14,6 +14,23 @@ def update_source_file(file_path, value):
     file.close
     return
 
+#   Init data files
+def init_data_files():
+    update_source_file(file_games, "0")
+    update_source_file(file_kills, "-")
+    update_source_file(file_wins, "-")
+    update_source_file(file_assists, "-")
+    update_source_file(file_dbno, "-")
+    update_source_file(file_kd, "-")
+    update_source_file(file_kda, "-")
+    update_source_file(file_top, "-")
+    update_source_file(file_avg_rank, "-")
+    update_source_file(file_total_damages, "-")
+    update_source_file(file_max_damages, "-")
+    update_source_file(file_avg_damages, "-")
+
+    return
+
 # The destination directory has to exist
 if not os.path.isdir(conf.CONST_PATH):
     print("Path {} not found.".format(conf.CONST_PATH))
@@ -27,7 +44,9 @@ file_wins = conf.CONST_PATH + "\\" + conf.CONST_FILE_WIN
 file_assists = conf.CONST_PATH + "\\" + conf.CONST_FILE_ASSIST
 file_dbno = conf.CONST_PATH + "\\" + conf.CONST_FILE_DBNO
 file_kd = conf.CONST_PATH + "\\" + conf.CONST_FILE_KD
+file_kda = conf.CONST_PATH + "\\" + conf.CONST_FILE_KDA
 file_top = conf.CONST_PATH + "\\" + conf.CONST_FILE_TOP
+file_avg_rank = conf.CONST_PATH + "\\" + conf.CONST_FILE_AVG_RANK
 file_total_damages = conf.CONST_PATH + "\\" + conf.CONST_FILE_TOTAL_DAMAGE
 file_max_damages = conf.CONST_PATH + "\\" + conf.CONST_FILE_DAMAGE
 file_avg_damages = conf.CONST_PATH + "\\" + conf.CONST_FILE_AVG_DAMAGE
@@ -148,34 +167,50 @@ for match in match_id_list:
                 if included["attributes"]["stats"]["damageDealt"] > max_damage:
                     max_damage = round(included["attributes"]["stats"]["damageDealt"])
 
-update_source_file(file_games, str(nb_match))
-update_source_file(file_kills, str(nb_kill))
-update_source_file(file_wins, str(nb_win))
-update_source_file(file_assists, str(nb_assist))
-update_source_file(file_dbno, str(nb_dbno))
-if nb_death > 0:
-    update_source_file(file_kd, str(round(float(nb_kill) / float(nb_death), 2)))
-else:
-    update_source_file(file_kd, str(nb_kill))
-# If the top rank occured more than once, we show it
-str_win_place = str(win_place)
-if win_place > 1 and top_repeat > 1:
-    str_win_place += " (x{})".format(top_repeat)
-update_source_file(file_top, str_win_place)
-update_source_file(file_total_damages, str(round(total_damage)))
-if nb_match > 0:
-    avg_damage = str(round(float(total_damage) / float(nb_match), 2))
-else:
-    avg_damage = 0
-update_source_file(file_avg_damages, str(round(float(avg_damage), 2)))
-update_source_file(file_max_damages, str(round(float(max_damage), 2)))
+if nb_match == 0:
+    init_data_files()
 
-print("nb games = {}".format(nb_match))
-print("nb kill = {}".format(nb_kill))
-print("nb win = {}".format(nb_win))
-print("nb assist = {}".format(nb_assist))
-print("nb dbno = {}".format(nb_dbno))
-print("win place = {}".format(str_win_place))
-print("total damages = {}".format(total_damage))
-print("avg damages = {}".format(avg_damage))
-print("max damages = {}".format(max_damage))
+    print("nb games = 0")
+    print("nb kill = -")
+    print("nb win = -")
+    print("nb assist = -")
+    print("nb dbno = -")
+    print("win place = -")
+    print("total damages = -")
+    print("avg damages = -")
+    print("max damages = -")
+else:
+    update_source_file(file_games, str(nb_match))
+    update_source_file(file_kills, str(nb_kill))
+    update_source_file(file_wins, str(nb_win))
+    update_source_file(file_assists, str(nb_assist))
+    update_source_file(file_dbno, str(nb_dbno))
+    if nb_death > 0:
+        update_source_file(file_kd, str(round(float(nb_kill) / float(nb_death), 2)))
+        update_source_file(file_kda, str(round(float(nb_kill + nb_assist) / float(nb_death), 2)))
+    else:
+        update_source_file(file_kd, str(nb_kill))
+        update_source_file(file_kd, str(nb_kill + nb_assist))
+    # If the top rank occured more than once, we show it
+    str_win_place = str(win_place)
+    if win_place > 1 and top_repeat > 1:
+        str_win_place += " (x{})".format(top_repeat)
+    update_source_file(file_top, str_win_place)
+    update_source_file(file_avg_rank, str(round(float(rank_sum) / float(nb_match), 2)))
+    update_source_file(file_total_damages, str(round(total_damage)))
+    if nb_match > 0:
+        avg_damage = str(round(float(total_damage) / float(nb_match), 2))
+    else:
+        avg_damage = 0
+    update_source_file(file_avg_damages, str(round(float(avg_damage), 2)))
+    update_source_file(file_max_damages, str(round(float(max_damage), 2)))
+
+    print("nb games = {}".format(nb_match))
+    print("nb kill = {}".format(nb_kill))
+    print("nb win = {}".format(nb_win))
+    print("nb assist = {}".format(nb_assist))
+    print("nb dbno = {}".format(nb_dbno))
+    print("win place = {}".format(str_win_place))
+    print("total damages = {}".format(total_damage))
+    print("avg damages = {}".format(avg_damage))
+    print("max damages = {}".format(max_damage))
