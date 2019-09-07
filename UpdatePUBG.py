@@ -98,6 +98,7 @@ nb_assist       = 0             # Number of assists
 nb_dbno         = 0             # Number of DBNOs
 nb_death        = 0             # Number of deaths
 win_place       = 100           # Best rank
+rank_sum        = 0             # sum of the different rankings to clacule the average rank
 total_damage    = 0             # Total damages
 max_damage      = 0             # Max damages in a game
 avg_damage      = 0             # average damages
@@ -163,6 +164,7 @@ for match in match_id_list:
                     top_repeat = 1
                 elif included["attributes"]["stats"]["winPlace"] == win_place:
                     top_repeat += 1
+                rank_sum += included["attributes"]["stats"]["winPlace"]
                 total_damage += included["attributes"]["stats"]["damageDealt"]
                 if included["attributes"]["stats"]["damageDealt"] > max_damage:
                     max_damage = round(included["attributes"]["stats"]["damageDealt"])
